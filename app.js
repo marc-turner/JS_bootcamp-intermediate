@@ -16,19 +16,30 @@
 
 const btn = document.querySelector('button');
 
-const moveX = (el, amount, delay, callback) => {
-    setTimeout(() => {
-        const maxX = document.body.clientWidth;
-        const dimensions = element.getBoundingClientRect();
-        const currentRight = dimensions.x + dimensions.width;
+const moveX = (el, amount, delay) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const bodyBoundry = document.body.clientWidth;
+            const elRight = el.getBoundingClientRect().right;
+            const currLeft = el.getBoundingClientRect().left;
 
-        if (currentRight + amount > maxX) {
-            failCallback();
-        } else {
-            el.style.transform = `translateX(${currentRight + amount}px)`;
-            successCallback();
-        }
-    }, delay);
+            if (elRight + amount > bodyBoundry) {
+                reject({ bodyBoundry, elRight });
+            } else {
+                el.style.transform = `translateX(${currLeft + amount}px)`;
+                resolve();
+            }
+        }, delay);
+    });
 };
 
-//
+moveX(btn, 100, 1000)
+    .then(() => moveX(btn, 100, 1000))
+    .then(() => moveX(btn, 100, 1000))
+    .then(() => moveX(btn, 900, 1000))
+    .then(() => console.log('DONE AGAIN'))
+    .catch(res =>
+        console.log(
+            `Sorry the most you can go is ${bodyBoundry}, you are at ${elRight}`
+        )
+    );
