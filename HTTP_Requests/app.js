@@ -78,3 +78,53 @@
 //     .catch(err => {
 //         console.log('Error Occurred', err);
 //     });
+
+// axios
+//     .get('https://swapi.co/api/planets/')
+//     .then(res => {
+//         console.log(res.data);
+//     })
+//     .catch(err => {
+//         console.log(`Something Wromg: ${err}`);
+//     });
+
+// axios
+//     .get('https://swapi.co/api/planets/')
+//     .then(({ data }) => {
+//         for (let planet of data.results) {
+//             console.log(planet.name);
+//         }
+//         return axios.get(data.next);
+//     })
+//     .then(({ data }) => {
+//         for (let planet of data.results) {
+//             console.log(planet.name);
+//         }
+//     })
+//     .catch(err => {
+//         console.log(err);
+//     });
+
+//  REFACTOR //\
+const fetchNextPlanets = (url = 'https://swapi.co/api/planets/') => {
+    console.log(url);
+    return axios.get(url);
+};
+
+const printPlanets = ({ data }) => {
+    console.log(data);
+    for (let planet of data.results) {
+        console.log(planet.name);
+    }
+    return Promise.resolve(data.next);
+};
+
+fetchNextPlanets()
+    .then(printPlanets)
+    .then(fetchNextPlanets)
+    .then(printPlanets)
+    .then(fetchNextPlanets)
+    .then(printPlanets)
+    .catch(err => {
+        console.log(`ERROR: ${err}`);
+    });
